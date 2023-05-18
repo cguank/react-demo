@@ -146,7 +146,7 @@ if (__DEV__) {
 
 export type Hook = {|
   memoizedState: any,
-  baseState: any,
+  baseState: any, // 本次更新前该Fiber节点的state，Update基于该state计算更新后的state
   baseQueue: Update<any, any> | null,
   queue: any,
   next: Hook | null,
@@ -1516,8 +1516,8 @@ function mountState<S>(
   }
   hook.memoizedState = hook.baseState = initialState;
   const queue: UpdateQueue<S, BasicStateAction<S>> = {
-    pending: null,
-    interleaved: null,
+    pending: null, // 表示当前正在等待处理的更新
+    interleaved: null, // 表示当前正在处理的更新
     lanes: NoLanes,
     dispatch: null,
     lastRenderedReducer: basicStateReducer,
