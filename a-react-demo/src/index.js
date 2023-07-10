@@ -9,7 +9,9 @@ import {BailOut} from './pages/BailOut';
 import {Concurrent} from './pages/Concurrent';
 import {APage} from './pages/APage';
 import {ClickEvent} from './pages/ClickEvent';
+import {Diff} from './pages/Diff';
 import {UseContext} from './pages/UseContext';
+import {UseRef} from './pages/UseRef';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -17,7 +19,9 @@ const root = ReactDOM.createRoot(
 );
 
 // root.render(<Concurrent />)
-root.render(<UseContext />)
+// root.render(<UseRef />)
+root.render(<Diff />)
+// root.render(<UseContext />)
 // root.render(<UseEffect />)
 // root.render(<BailOut />)
 // root.render(<List />)
