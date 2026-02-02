@@ -145,6 +145,7 @@ if (__DEV__) {
 }
 
 export type Hook = {|
+  // memoizedState 表示该 Hook 当前记忆的状态值。对 useState/useReducer，这就是保存的 state；对 useRef，则存储 ref 对象；对 useEffect 来说则保存 effect 链表等。它通常用于保存跨渲染周期的 hook 内部数据。
   memoizedState: any,
   baseState: any, // 本次更新前该Fiber节点的state，Update基于该state计算更新后的state
   baseQueue: Update<any, any> | null,
@@ -653,6 +654,12 @@ function mountWorkInProgressHook(): Hook {
   return workInProgressHook;
 }
 
+
+// updateWorkInProgressHook 的作用是用于在 fiber 的渲染期间，获取当前正在处理的 hook，或者克隆当前 hook 以供下次渲染时复用。
+// 具体来说，它会遍历（复用或者克隆）workInProgress 的 hook 链表，确保每一次 render 时 hooks 的顺序和数量保持一致。
+// 当存在 workInProgressHook 时，直接复用；否则根据 currentHook 创建新的 hook 节点。
+// 这样可以保证 hook 的状态在多次渲染间正确传递，实现 hooks 状态的保存与更新。
+
 function updateWorkInProgressHook(): Hook {
   // This function is used both for updates and for re-renders triggered by a
   // render phase update. It assumes there is either a current hook we can
@@ -812,7 +819,7 @@ function updateReducer<S, I, A>(
     let newBaseQueueFirst = null;
     let newBaseQueueLast = null;
     let update = first;
-    do {
+    do {                                 
       const updateLane = update.lane;
       if (!isSubsetOfLanes(renderLanes, updateLane)) {
         // Priority is insufficient. Skip this update. If this is the first
@@ -1546,6 +1553,7 @@ function rerenderState<S>(
   return rerenderReducer(basicStateReducer, (initialState: any));
 }
 
+// 父组件和子组件哪个useEffect先执行
 function pushEffect(tag, create, destroy, deps) {
   const effect: Effect = {
     tag,
@@ -2255,6 +2263,11 @@ function dispatchSetState<S, A>(
     next: (null: any),
   };
 
+  // 这里判断是否处于“渲染阶段”（render phase），指的是当前代码是否运行在函数组件的 render 方法执行期间，
+  // 也就是 React 进行虚拟 DOM 计算、调用组件函数、执行 Hook 的过程中。
+  // 这不是 commit 之后的阶段（commit 阶段是 React 已经确定好要变更哪些 DOM 节点并开始实际操作页面的时候）。
+  // 渲染阶段通常指从调和（reconciliation）开始到 commit 之前的这段时间。此时调用 setState/update 类的操作不会立即使组件重新渲染，
+  // 而是会将这些更新临时缓存，待本次渲染流程结束后统一处理。这样做可以防止无限递归调用和产生不可预测的副作用。
   if (isRenderPhaseUpdate(fiber)) {
     enqueueRenderPhaseUpdate(queue, update);
   } else {

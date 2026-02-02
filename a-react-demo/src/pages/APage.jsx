@@ -1,24 +1,24 @@
-import React from 'react'
-import { Link, BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import React,{} from 'react';
 
-export function APage () {
-  const [count, setCount] = React.useState(0)
+export function APage() {
+  const [count, setCount] = React.useState(0);
+  const [secondCountDownConfig, seta] = React.useState(10)
+  
+  React.useLayoutEffect(() => {
+    for (let i = 0; i < 40000; i++) {
+      console.log('i', count, i);
+    }
+  }, [count]);
 
   React.useEffect(() => {
-    console.log('.....count create', count);
-    return () => {
-      console.log('......destroy', count);
-    }
-  }, [count])
+    window.addEventListener('click', (e) => {
+      console.log(e);
+    })
+  },[])
+
   return (
-    <span onClick={() => setCount(count + 1)}>click me { count }</span>
-    // <div className="App">
-    //   <span onClick={() => setCount(count + 1)}>click me</span>
-    //   <p>
-    //     <h5>{count}</h5>
-    //     <strong>{count}</strong>
-    //   </p>
-    //   <h4>no change</h4>
-    // </div>
+    <div onClick={() => setCount(count + 1)}>
+      click me {count}
+    </div>
   );
 }

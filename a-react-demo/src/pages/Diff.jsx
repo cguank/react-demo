@@ -15,7 +15,7 @@ function Clicker({children}) {
     <div className="clicker">
       <h2>You clicked {count} times!</h2>
       <button onClick={() => setCount(count + 1)}>Increment</button>
-      {children}
+      {/* {children} */}
       {/* <ComponentToRender /> */}
     </div>
   );
