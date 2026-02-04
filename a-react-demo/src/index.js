@@ -40,6 +40,15 @@ import PlacementMechanismAnalysis from './pages/PlacementMechanismAnalysis';
 import PlacementIndexAnalysis from './pages/PlacementIndexAnalysis';
 import CommitPhaseIndexUsageAnalysis from './pages/CommitPhaseIndexUsageAnalysis';
 import CommitDOMOperationOrderAnalysis from './pages/CommitDOMOperationOrderAnalysis';
+import UseLayoutEffectTimingAnalysis from './pages/UseLayoutEffectTimingAnalysis';
+import UseLayoutEffectBrowserRenderingAnalysis from './pages/UseLayoutEffectBrowserRenderingAnalysis';
+import UseEffectSchedulingAnalysis from './pages/UseEffectSchedulingAnalysis';
+import RenderCommitPhaseAnalysis from './pages/RenderCommitPhaseAnalysis';
+import ReactInterviewQuestions from './pages/ReactInterviewQuestions';
+import FiberTypeAnalysis from './pages/FiberTypeAnalysis';
+import BeginWorkHooksAnalysis from './pages/BeginWorkHooksAnalysis';
+import DOMOperationAndRenderingAnalysis from './pages/DOMOperationAndRenderingAnalysis';
+import EffectCleanupTimingAnalysis from './pages/EffectCleanupTimingAnalysis';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -70,7 +79,7 @@ const root = ReactDOM.createRoot(
 // root.render(<TreeDiffLayerAnalysis />)
 // root.render(<ComponentTypeChangeAnalysis />)
 // root.render(<DeletionOrderAnalysis />)
-// root.render(<UseEffectCleanupOrderAnalysis />)
+root.render(<UseEffectCleanupOrderAnalysis />)
 // root.render(<UseEffectCleanupDOMTimingAnalysis />)
 // root.render(<ReactMemoAnalysis />)
 // root.render(<CrossLevelDiffAnalysis />)
@@ -82,7 +91,16 @@ const root = ReactDOM.createRoot(
 // root.render(<PlacementMechanismAnalysis />)
 // root.render(<PlacementIndexAnalysis />)
 // root.render(<CommitPhaseIndexUsageAnalysis />)
-root.render(<CommitDOMOperationOrderAnalysis />)
+// root.render(<CommitDOMOperationOrderAnalysis />)
+// root.render(<UseLayoutEffectTimingAnalysis />)
+// root.render(<UseLayoutEffectBrowserRenderingAnalysis />)
+// root.render(<UseEffectSchedulingAnalysis />)
+// root.render(<RenderCommitPhaseAnalysis />)
+// root.render(<ReactInterviewQuestions />)
+// root.render(<FiberTypeAnalysis />)
+// root.render(<BeginWorkHooksAnalysis />)
+// root.render(<DOMOperationAndRenderingAnalysis />)
+root.render(<EffectCleanupTimingAnalysis />)
 // root.render(<SingleChld />)
 // root.render(<App />)
 // If you want to start measuring performance in your app, pass a function

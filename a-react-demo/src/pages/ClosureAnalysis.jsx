@@ -18,16 +18,15 @@ function FunctionComponentClosure() {
   const handleClickWrong = () => {
     console.log('\n❌ === 闭包陷阱示例 ===');
     console.log('点击时的 count:', count);
+          for (var i = 0; i < 5; i++) {
+            setTimeout(() => {
+              console.log('i',i, count);
+              setCount(count + 1); // ❌ 使用闭包捕获的旧值
+            }, 3000);
+          }
     
-    setTimeout(() => {
-      console.log('3秒后，闭包捕获的 count:', count);
-      console.log('注意：这个 count 是点击时的旧值！');
-      setCount(count + 1); // ❌ 使用闭包捕获的旧值
-    }, 3000);
-    
-    console.log('👆 快速点击其他按钮改变 count，3秒后看结果');
   };
-  
+
   // 2. 函数式更新 - 正确方式
   const handleClickRight = () => {
     console.log('\n✅ === 函数式更新（正确） ===');
