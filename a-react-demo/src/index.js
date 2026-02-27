@@ -49,6 +49,15 @@ import FiberTypeAnalysis from './pages/FiberTypeAnalysis';
 import BeginWorkHooksAnalysis from './pages/BeginWorkHooksAnalysis';
 import DOMOperationAndRenderingAnalysis from './pages/DOMOperationAndRenderingAnalysis';
 import EffectCleanupTimingAnalysis from './pages/EffectCleanupTimingAnalysis';
+import VirtualListInterview from './pages/VirtualListInterview';
+import TypeScriptInterviewQuestions from './pages/TypeScriptInterviewQuestions';
+import ReactRefsAnalysis from './pages/ReactRefsAnalysis';
+import TimeSlicingAnalysis from './pages/TimeSlicingAnalysis';
+import EventDelegationAnalysis from './pages/EventDelegationAnalysis';
+import RequestAnimationFrameAnalysis from './pages/RequestAnimationFrameAnalysis';
+import TimeSliceUnitAnalysis from './pages/TimeSliceUnitAnalysis';
+import UseMemoRenderPhase from './pages/UseMemoRenderPhase';
+import RefUnmountAnalysis from './pages/RefUnmountAnalysis';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -100,7 +109,17 @@ root.render(<UseEffectCleanupOrderAnalysis />)
 // root.render(<FiberTypeAnalysis />)
 // root.render(<BeginWorkHooksAnalysis />)
 // root.render(<DOMOperationAndRenderingAnalysis />)
-root.render(<EffectCleanupTimingAnalysis />)
+// root.render(<EffectCleanupTimingAnalysis />)
+// root.render(<SystemDesignInterview />)
+// root.render(<VirtualListInterview />)
+// root.render(<TypeScriptInterviewQuestions />)
+// root.render(<ReactRefsAnalysis />)
+// root.render(<TimeSlicingAnalysis />)
+root.render(<EventDelegationAnalysis />)
+// root.render(<RequestAnimationFrameAnalysis />)
+// root.render(<TimeSliceUnitAnalysis />)
+// root.render(<UseMemoRenderPhase />)
+// root.render(<RefUnmountAnalysis />)
 // root.render(<SingleChld />)
 // root.render(<App />)
 // If you want to start measuring performance in your app, pass a function
