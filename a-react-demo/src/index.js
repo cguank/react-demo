@@ -58,6 +58,10 @@ import RequestAnimationFrameAnalysis from './pages/RequestAnimationFrameAnalysis
 import TimeSliceUnitAnalysis from './pages/TimeSliceUnitAnalysis';
 import UseMemoRenderPhase from './pages/UseMemoRenderPhase';
 import RefUnmountAnalysis from './pages/RefUnmountAnalysis';
+import TimeSlicingContinuationAnalysis from './pages/TimeSlicingContinuationAnalysis';
+import DesignPatternsInterview from './pages/DesignPatternsInterview';
+import WhyFiberIntroduced from './pages/WhyFiberIntroduced';
+import ReactSchedulingAnalysis from './pages/ReactSchedulingAnalysis';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
@@ -88,7 +92,7 @@ const root = ReactDOM.createRoot(
 // root.render(<TreeDiffLayerAnalysis />)
 // root.render(<ComponentTypeChangeAnalysis />)
 // root.render(<DeletionOrderAnalysis />)
-root.render(<UseEffectCleanupOrderAnalysis />)
+// root.render(<UseEffectCleanupOrderAnalysis />)
 // root.render(<UseEffectCleanupDOMTimingAnalysis />)
 // root.render(<ReactMemoAnalysis />)
 // root.render(<CrossLevelDiffAnalysis />)
@@ -112,14 +116,17 @@ root.render(<UseEffectCleanupOrderAnalysis />)
 // root.render(<EffectCleanupTimingAnalysis />)
 // root.render(<SystemDesignInterview />)
 // root.render(<VirtualListInterview />)
-// root.render(<TypeScriptInterviewQuestions />)
-// root.render(<ReactRefsAnalysis />)
+root.render(<TypeScriptInterviewQuestions />)
+// root.render(<WhyFiberIntroduced />)
 // root.render(<TimeSlicingAnalysis />)
-root.render(<EventDelegationAnalysis />)
+// root.render(<EventDelegationAnalysis />)
 // root.render(<RequestAnimationFrameAnalysis />)
 // root.render(<TimeSliceUnitAnalysis />)
 // root.render(<UseMemoRenderPhase />)
 // root.render(<RefUnmountAnalysis />)
+// root.render(<TimeSlicingContinuationAnalysis />)
+// root.render(<ReactSchedulingAnalysis />)
+// root.render(<DesignPatternsInterview />)
 // root.render(<SingleChld />)
 // root.render(<App />)
 // If you want to start measuring performance in your app, pass a function
