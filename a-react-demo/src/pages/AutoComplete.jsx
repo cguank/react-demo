@@ -87,13 +87,21 @@ export  function AutoComplete() {
     return () => document.removeEventListener('click', handleClick);
   }, []);
 
+  // 加上useCallback防止重复渲染，只会在挂载时执行一次，卸载时执行一次
+  const inputRef = React.useCallback((el) => {
+    {
+      console.log('===========ref el', el);
+      el?.focus();
+    }
+  },[]);
+
   return (
     <div ref={rootRef} style={{position: 'relative', width: 200}}>
       <input
         value={value}
         onChange={handleChange}
         onFocus={() => setShow(true)}
-        ref={el => el?.focus()}
+        ref={inputRef}
       />
       {show && (
         <div

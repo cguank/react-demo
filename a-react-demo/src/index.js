@@ -63,6 +63,7 @@ import DesignPatternsInterview from './pages/DesignPatternsInterview';
 import WhyFiberIntroduced from './pages/WhyFiberIntroduced';
 import ReactSchedulingAnalysis from './pages/ReactSchedulingAnalysis';
 import reportWebVitals from './reportWebVitals';
+import {AutoComplete } from './pages/AutoComplete'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root')
@@ -116,7 +117,7 @@ const root = ReactDOM.createRoot(
 // root.render(<EffectCleanupTimingAnalysis />)
 // root.render(<SystemDesignInterview />)
 // root.render(<VirtualListInterview />)
-root.render(<TypeScriptInterviewQuestions />)
+// root.render(<TypeScriptInterviewQuestions />)
 // root.render(<WhyFiberIntroduced />)
 // root.render(<TimeSlicingAnalysis />)
 // root.render(<EventDelegationAnalysis />)
@@ -128,7 +129,8 @@ root.render(<TypeScriptInterviewQuestions />)
 // root.render(<ReactSchedulingAnalysis />)
 // root.render(<DesignPatternsInterview />)
 // root.render(<SingleChld />)
-// root.render(<App />)
+root.render(<AutoComplete />)
+// root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

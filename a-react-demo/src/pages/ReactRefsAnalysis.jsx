@@ -721,7 +721,60 @@ function getPublicInstance(instance: Instance): * {
 }
 
 
-5. Ref Flag 定义
+5. 回调 ref（ref 函数）执行底层逻辑
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"ref 函数" 即回调 ref：ref={(el) => { ... }}。底层只做两件事：先卸旧再挂新。
+
+（1）ref 如何挂到 Fiber 上
+  - 协调时（ReactChildFiber.old.js）coerceRef(returnFiber, current, element)
+    把 element.ref 原样赋给 fiber.ref，不区分函数还是对象。
+  - 所以 <div ref={callback}> 里 callback 会出现在该 div 对应 Fiber 的 ref 上。
+
+（2）何时标记需要处理 ref
+  - completeWork（ReactFiberCompleteWork.old.js）：HostComponent 等若 workInProgress.ref !== null，
+    调用 markRef(workInProgress) → workInProgress.flags |= Ref。
+  - beginWork（ReactFiberBeginWork.old.js）：ForwardRef 等若 current.ref !== workInProgress.ref，
+    也会 markRef。有 Ref 的节点在 Commit 阶段会执行「卸旧 + 挂新」。
+
+（3）Mutation 阶段：执行「卸旧」— 调用 ref(null)
+  - ReactFiberCommitWork.old.js commitMutationEffectsOnFiber() 中，对带 Ref 的节点
+    （如 HostComponent / ClassComponent，约 2166、2156 行）：
+      if (flags & Ref && current !== null) {
+        safelyDetachRef(current, current.return);  // 用旧 fiber（current）
+      }
+  - safelyDetachRef（约 268–303 行）：
+      const ref = current.ref;
+      if (typeof ref === 'function') {
+        ref(null);   // 回调 ref：直接执行 ref 函数，传入 null
+      } else {
+        ref.current = null;   // 对象 ref
+      }
+  - 即：在 DOM 变更前，先对「旧」Fiber 的 ref 执行一次，回调 ref 就是 ref(null)。
+
+（4）Layout 阶段：执行「挂新」— 调用 ref(instance)
+  - commitLayoutEffectOnFiber() 递归到带 Ref 的节点后（如 HostComponent 约 1026、1030 行）：
+      if (finishedWork.flags & Ref) {
+        commitAttachRef(finishedWork);   // 用新 fiber（finishedWork）
+      }
+  - commitAttachRef（约 1232–1287 行）：
+      const ref = finishedWork.ref;
+      const instance = finishedWork.stateNode;
+      instanceToUse = getPublicInstance(instance);  // DOM 或组件实例
+      if (typeof ref === 'function') {
+        ref(instanceToUse);   // 回调 ref：执行 ref 函数，传入真实实例
+      } else {
+        ref.current = instanceToUse;   // 对象 ref
+      }
+  - 即：DOM 已更新、在 componentDidMount/useLayoutEffect 之前，对「新」Fiber 执行 ref(实例)。
+
+（5）顺序与次数总结
+  - 顺序：先 Mutation 里 ref(null)（卸旧）→ DOM 变更 → Layout 里 ref(instance)（挂新）。
+  - 回调 ref 每次有 Ref 的 commit 都会执行两次：一次 null、一次实例；即使 ref 函数引用未变也会执行。
+  - 若希望少执行，可用 useCallback 包住 ref 函数并空依赖，或使用 useRef 对象 ref。
+
+
+6. Ref Flag 定义
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // ReactFiberFlags.js
