@@ -63,7 +63,8 @@ import DesignPatternsInterview from './pages/DesignPatternsInterview';
 import WhyFiberIntroduced from './pages/WhyFiberIntroduced';
 import ReactSchedulingAnalysis from './pages/ReactSchedulingAnalysis';
 import reportWebVitals from './reportWebVitals';
-import {AutoComplete } from './pages/AutoComplete'
+import { AutoComplete } from './pages/AutoComplete'
+import { DialogDemo } from './pages/DialogDemo'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root')
@@ -129,7 +130,9 @@ const root = ReactDOM.createRoot(
 // root.render(<ReactSchedulingAnalysis />)
 // root.render(<DesignPatternsInterview />)
 // root.render(<SingleChld />)
-root.render(<AutoComplete />)
+// root.render(<AutoComplete />)
+root.render(<DialogDemo />)
+
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
