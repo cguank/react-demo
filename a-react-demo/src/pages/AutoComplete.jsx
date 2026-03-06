@@ -6,12 +6,15 @@ const mockData = {
   data: {list: ['Alice', 'A1', 'A2', 'Blice', 'B1', 'B2', 'abc', 'bac']},
 };
 const getList = (str, signal) =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     let timer = setTimeout(() => {
       const data = str ? mockData.data.list.filter(i => i.includes(str)) : [];
       resolve({...mockData, data: {list: data}});
-    }, Math.random() * 800);
-    signal?.addEventListener('abort', () => clearTimeout(timer));
+    }, Math.random() * 2000);
+    signal?.addEventListener('abort', () => {
+      clearTimeout(timer);
+      reject(new DOMException('reject AbortError', 'AbortError'));
+    });
   });
 
 // 生产级防抖
@@ -21,6 +24,7 @@ function useDebounce(fn, wait) {
   React.useEffect(() => {
     fnRef.current = fn;
   }, [fn]);
+
   return React.useCallback(
     (...args) => {
       clearTimeout(timerRef.current);
@@ -31,7 +35,7 @@ function useDebounce(fn, wait) {
 }
 
 // 🔥 终极满分组件
-export  function AutoComplete() {
+export function AutoComplete() {
   const [value, setValue] = React.useState('');
   const [list, setList] = React.useState([]);
   const [show, setShow] = React.useState(false);
@@ -53,14 +57,20 @@ export  function AutoComplete() {
 
     try {
       const res = await getList(val, ctrl.signal);
-      if (ctrl.signal.aborted || seq !== seqRef.current) return;
+      if (ctrl.signal.aborted) {
+        console.log('=======req abort', seq, seqRef.current);
+        return;
+      }
       setList(res.data.list);
     } catch (e) {
-      if (e.name === 'AbortError') return;
+      if (e.name === 'AbortError') {
+        console.log('=======req abort abort reject', e);
+        return;
+      }
     } finally {
       if (seq === seqRef.current) setLoading(false);
     }
-  }, 300);
+  }, 0);
 
   // 输入
   const handleChange = e => {
@@ -88,12 +98,12 @@ export  function AutoComplete() {
   }, []);
 
   // 加上useCallback防止重复渲染，只会在挂载时执行一次，卸载时执行一次
-  const inputRef = React.useCallback((el) => {
+  const inputRef = React.useCallback(el => {
     {
       console.log('===========ref el', el);
       el?.focus();
     }
-  },[]);
+  }, []);
 
   return (
     <div ref={rootRef} style={{position: 'relative', width: 200}}>
