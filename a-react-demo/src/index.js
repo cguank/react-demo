@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import {List} from './pages/List';
+import { Test } from "./pages/Test";
 import {SingleChld} from './pages/SingleChild';
 import {UseEffect} from './pages/UseEffect';
 import {BailOut} from './pages/BailOut';
@@ -65,6 +65,8 @@ import ReactSchedulingAnalysis from './pages/ReactSchedulingAnalysis';
 import reportWebVitals from './reportWebVitals';
 import { AutoComplete } from './pages/AutoComplete'
 import { DialogDemo } from './pages/DialogDemo'
+import {  UploadDemo } from './pages/Upload'
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root')
@@ -74,6 +76,7 @@ const root = ReactDOM.createRoot(
 // root.render(<UseRef />)
 // root.render(<Diff />)
 // root.render(<WebSocketTest />)
+root.render(<Test />)
 // root.render(<SearchUser />)
 // root.render(<UseContext />)
 // root.render(<UseEffect />)
@@ -131,10 +134,11 @@ const root = ReactDOM.createRoot(
 // root.render(<DesignPatternsInterview />)
 // root.render(<SingleChld />)
 // root.render(<AutoComplete />)
-root.render(<DialogDemo />)
+// root.render(<DialogDemo />)
+root.render(<UploadDemo />)
 
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();
