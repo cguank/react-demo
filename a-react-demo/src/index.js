@@ -66,6 +66,7 @@ import reportWebVitals from './reportWebVitals';
 import { AutoComplete } from './pages/AutoComplete'
 import { DialogDemo } from './pages/DialogDemo'
 import {  UploadDemo } from './pages/Upload'
+import {  CalendarDemo } from './pages/CalendarDemo'
 
 
 const root = ReactDOM.createRoot(
@@ -135,7 +136,8 @@ root.render(<Test />)
 // root.render(<SingleChld />)
 // root.render(<AutoComplete />)
 // root.render(<DialogDemo />)
-root.render(<UploadDemo />)
+// root.render(<UploadDemo />)
+root.render(<CalendarDemo />)
 
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function
