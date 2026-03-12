@@ -67,6 +67,8 @@ import { AutoComplete } from './pages/AutoComplete'
 import { DialogDemo } from './pages/DialogDemo'
 import {  UploadDemo } from './pages/Upload'
 import {  CalendarDemo } from './pages/CalendarDemo'
+import {  TSXDemo } from './pages/TSXDemo'
+import { WaterfallDemo } from './pages/WaterfallDemo'
 
 
 const root = ReactDOM.createRoot(
@@ -77,7 +79,7 @@ const root = ReactDOM.createRoot(
 // root.render(<UseRef />)
 // root.render(<Diff />)
 // root.render(<WebSocketTest />)
-root.render(<Test />)
+// root.render(<Test />)
 // root.render(<SearchUser />)
 // root.render(<UseContext />)
 // root.render(<UseEffect />)
@@ -121,6 +123,7 @@ root.render(<Test />)
 // root.render(<DOMOperationAndRenderingAnalysis />)
 // root.render(<EffectCleanupTimingAnalysis />)
 // root.render(<SystemDesignInterview />)
+root.render(<WaterfallDemo />)
 // root.render(<VirtualListInterview />)
 // root.render(<TypeScriptInterviewQuestions />)
 // root.render(<WhyFiberIntroduced />)
@@ -137,7 +140,9 @@ root.render(<Test />)
 // root.render(<AutoComplete />)
 // root.render(<DialogDemo />)
 // root.render(<UploadDemo />)
-root.render(<CalendarDemo />)
+// root.render(<CalendarDemo />)
+// root.render(<TSXDemo />)
+// root.render(<WaterfallDemo />)
 
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function

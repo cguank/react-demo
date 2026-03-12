@@ -11,10 +11,17 @@ export function Test () {
   
   React.useEffect(() => {
     // fn();
+    window.addEventListener('fetch', (e) => {
+      try {
+        console.log('fetch', e);
+      } catch (error) {
+        console.log('fetch error', error);
+      }
+    })
   }, []);
   return (
-    <div onClick={() => setCount(count + 1)}>
-      Test {count}
-    </div>
-  )
+    <div style={{textAlign:'center',lineHeight:'100vh'}}>
+      <span>aaaa</span>
+   </div>
+  );
 }

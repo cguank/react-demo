@@ -69,6 +69,12 @@ function useDebounce(fn, wait) {
     fnRef.current = fn;
   }, [fn]);
 
+  React.useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   return React.useCallback(
     (...args) => {
       clearTimeout(timerRef.current);
