@@ -69,6 +69,8 @@ import {  UploadDemo } from './pages/Upload'
 import {  CalendarDemo } from './pages/CalendarDemo'
 import {  TSXDemo } from './pages/TSXDemo'
 import { WaterfallDemo } from './pages/WaterfallDemo'
+import { PositionDemo } from './pages/PositionDemo'
+import { ModalDemo  } from "./pages/ModalDemo";
 
 
 const root = ReactDOM.createRoot(
@@ -79,7 +81,8 @@ const root = ReactDOM.createRoot(
 // root.render(<UseRef />)
 // root.render(<Diff />)
 // root.render(<WebSocketTest />)
-// root.render(<Test />)
+// root.render(<PositionDemo />)
+root.render(<Test />)
 // root.render(<SearchUser />)
 // root.render(<UseContext />)
 // root.render(<UseEffect />)
@@ -123,7 +126,7 @@ const root = ReactDOM.createRoot(
 // root.render(<DOMOperationAndRenderingAnalysis />)
 // root.render(<EffectCleanupTimingAnalysis />)
 // root.render(<SystemDesignInterview />)
-root.render(<WaterfallDemo />)
+// root.render(<WaterfallDemo />)
 // root.render(<VirtualListInterview />)
 // root.render(<TypeScriptInterviewQuestions />)
 // root.render(<WhyFiberIntroduced />)
@@ -143,6 +146,8 @@ root.render(<WaterfallDemo />)
 // root.render(<CalendarDemo />)
 // root.render(<TSXDemo />)
 // root.render(<WaterfallDemo />)
+// root.render(<PositionDemo />)
+// root.render(<ModalDemo />)
 
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function

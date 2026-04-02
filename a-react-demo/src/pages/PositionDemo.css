@@ -1,0 +1,164 @@
+/* PositionDemo 布局与盒子基础 */
+.position-demo {
+  padding: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.position-demo h1 {
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+}
+
+.demo-section {
+  margin-bottom: 32px;
+}
+
+.demo-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.section-desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.container {
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.container--bordered {
+  border: 1px dashed #ccc;
+}
+
+.container--relative {
+  position: relative;
+}
+
+.container--anchor {
+  background: #e8f4fd;
+  border: 1px solid #b3d9f2;
+}
+
+.box {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.box--static {
+  position: static;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+}
+
+.box--gray {
+  background: #e9ecef;
+  border: 1px solid #dee2e6;
+  margin-top: 8px;
+}
+
+/* relative：相对自身偏移 */
+.box--relative {
+  position: relative;
+  top: 10px;
+  left: 20px;
+  background: #cfe2ff;
+  border: 1px solid #0d6efd;
+}
+
+/* absolute */
+.box--absolute {
+  position: absolute;
+  background: #d1e7dd;
+  border: 1px solid #198754;
+}
+
+.box--absolute.box--tl {
+  top: 8px;
+  left: 8px;
+}
+
+.box--absolute.box--tr {
+  top: 8px;
+  right: 8px;
+}
+
+.box--absolute.box--bl {
+  bottom: 8px;
+  left: 8px;
+}
+
+.box--absolute.box--br {
+  bottom: 8px;
+  right: 8px;
+}
+
+/* 默认 absolute 示例里的位置 */
+.container--relative .box--absolute:not(.box--tl):not(.box--tr):not(.box--bl):not(.box--br) {
+  top: 10px;
+  right: 10px;
+}
+
+/* fixed：相对视口 */
+.box--fixed {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: #f8d7da;
+  border: 1px solid #dc3545;
+  z-index: 10;
+}
+
+/* sticky */
+.sticky-wrapper {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.box--sticky {
+  position: sticky;
+  top: 0;
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  z-index: 1;
+}
+
+.sticky-content p {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+/* z-index 示例 */
+.box--z1 {
+  top: 20px;
+  left: 20px;
+  background: #e2e3e5;
+  z-index: 1;
+}
+
+.box--z2 {
+  top: 35px;
+  left: 50px;
+  background: #cfe2ff;
+  z-index: 2;
+}
+
+.box--z3 {
+  top: 50px;
+  left: 80px;
+  background: #f8d7da;
+  z-index: 3;
+}
