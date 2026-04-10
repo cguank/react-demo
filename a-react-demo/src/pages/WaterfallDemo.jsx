@@ -311,6 +311,128 @@ function WaterfallImageMasonry({
   );
 }
 
+/**
+ * 图片瀑布流（绝对定位）：与 flex 多列同一套最短列算法，
+ * 子项用 position:absolute + left/top/width，容器高度为各列最大累计高。
+ */
+function WaterfallImageMasonryAbsolute({
+  items,
+  columnCount = 3,
+  gap = 12,
+  containerMaxWidth = 900,
+  defaultHeight = 200,
+}) {
+  const containerRef = useRef(null);
+  const [columnWidth, setColumnWidth] = useState(300);
+  const [heights, setHeights] = useState({});
+
+  useEffect(() => {
+    setHeights((prev) => {
+      const next = { ...prev };
+      items.forEach((it) => {
+        if (next[it.id] == null) {
+          if (it.intrinsicWidth && it.intrinsicHeight && columnWidth) {
+            next[it.id] =
+              heightFromNaturalSize(
+                it.intrinsicWidth,
+                it.intrinsicHeight,
+                columnWidth
+              ) || defaultHeight;
+          } else {
+            next[it.id] = defaultHeight;
+          }
+        }
+      });
+      return next;
+    });
+  }, [items, columnWidth, defaultHeight]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const w = el.clientWidth;
+      const cw = Math.floor((w - (columnCount - 1) * gap) / columnCount);
+      if (cw > 0) setColumnWidth(cw);
+    });
+    ro.observe(el);
+    const w = el.clientWidth;
+    const cw = Math.floor((w - (columnCount - 1) * gap) / columnCount);
+    if (cw > 0) setColumnWidth(cw);
+    return () => ro.disconnect();
+  }, [columnCount, gap]);
+
+  const onHeightReady = useCallback((id, h) => {
+    setHeights((prev) => (prev[id] === h ? prev : { ...prev, [id]: h }));
+  }, []);
+
+  const itemsWithHeight = useMemo(
+    () =>
+      items.map((it) => ({
+        ...it,
+        height: heights[it.id] ?? defaultHeight,
+      })),
+    [items, heights, defaultHeight]
+  );
+
+  const { positions, totalHeight } = useMemo(() => {
+    if (columnWidth <= 0) {
+      return { positions: [], totalHeight: 0 };
+    }
+    const colHeights = Array.from({ length: columnCount }, () => 0);
+    const list = itemsWithHeight.map((item) => {
+      let minIdx = 0;
+      let minH = colHeights[0];
+      for (let i = 1; i < columnCount; i++) {
+        if (colHeights[i] < minH) {
+          minH = colHeights[i];
+          minIdx = i;
+        }
+      }
+      const left = minIdx * (columnWidth + gap);
+      const top = colHeights[minIdx];
+      colHeights[minIdx] += item.height + gap;
+      return { item, left, top, width: columnWidth, height: item.height };
+    });
+    const maxCol = colHeights.length ? Math.max(...colHeights) : 0;
+    const total = list.length ? Math.max(0, maxCol - gap) : 0;
+    return { positions: list, totalHeight: total };
+  }, [itemsWithHeight, columnCount, gap, columnWidth]);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        maxWidth: containerMaxWidth,
+        margin: '0 auto',
+      }}
+    >
+      <div style={{ position: 'relative', width: '100%', minHeight: totalHeight || 1 }}>
+        {positions.map(({ item, left, top, width }) => (
+          <div
+            key={item.id}
+            style={{
+              position: 'absolute',
+              left,
+              top,
+              width,
+            }}
+          >
+            <WaterfallImageCard
+              item={item}
+              columnWidth={columnWidth}
+              defaultHeight={defaultHeight}
+              onHeightReady={onHeightReady}
+              gap={gap}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ---------- 以下为原来的色块 Demo（无图）----------
 
 function makeItems(count, seed = 0) {
@@ -334,9 +456,12 @@ function WaterfallColumns({ items, columnCount = 3, gap = 12 }) {
   return (
     <div
       style={{
+        // columnCount + columnGap：优点 — 原生多列、少 JS、实现快；缺点 — 填充顺序是「先填满第 1 列再第 2 列…」，与「最短列」瀑布流不一致，细调能力弱于 flex/绝对定位。
         columnCount,
         columnGap: gap,
+        // maxWidth:900：优点 — 大屏上限制行长、版面不无限拉宽；缺点 — 魔数，换设计稿时要手改，未与全局 token 对齐。
         maxWidth: 900,
+        // margin:'0 auto'：优点 — 块级容器在父级内水平居中，配合 maxWidth 很常见；缺点 — 仅水平居中，垂直要靠别的布局；父级需有足够宽度才有两侧留白。
         margin: '0 auto',
       }}
     >
@@ -373,6 +498,12 @@ function WaterfallColumns({ items, columnCount = 3, gap = 12 }) {
   );
 }
 
+/**
+ * WaterfallShortestColumn — 外层横向 flex + 每列纵向 flex：
+ * 优点：在文档流内，不用算每张卡的 top/left；gap、alignItems:flex-start 实现列顶对齐简单；与「最短列」算法在视觉高度上均衡。
+ * 缺点：列宽依赖 calc + flex-basis，特窄屏可能要 min-width 兜底；分列必须 JS（不像 column-count 纯 CSS）；列特别多时子 flex 项变多（常见 2～4 列无压力）。
+ * 资源加载：DOM 按「第 1 列整棵子树 → 第 2 列 → …」排列，解析顺序会优先遇到左列里的 img 等，请求通常更早发起；并不是「等第一列全部下完才下第二列」（仍并行），但若希望各列首屏更均衡，可配合 loading="lazy"、fetchPriority 等。
+ */
 function WaterfallShortestColumn({ items, columnCount = 3, gap = 12 }) {
   const columns = useMemo(() => {
     const cols = Array.from({ length: columnCount }, () => ({
@@ -449,9 +580,100 @@ function WaterfallShortestColumn({ items, columnCount = 3, gap = 12 }) {
   );
 }
 
+/**
+ * 色块瀑布流（绝对定位）：最短列分配 + 每项 top/left/width 绝对定位。
+ */
+function WaterfallAbsolute({ items, columnCount = 3, gap = 12, containerMaxWidth = 900 }) {
+  const containerRef = useRef(null);
+  const [columnWidth, setColumnWidth] = useState(300);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      const w = el.clientWidth;
+      const cw = Math.floor((w - (columnCount - 1) * gap) / columnCount);
+      if (cw > 0) setColumnWidth(cw);
+    });
+    ro.observe(el);
+    const w = el.clientWidth;
+    const cw = Math.floor((w - (columnCount - 1) * gap) / columnCount);
+    if (cw > 0) setColumnWidth(cw);
+    return () => ro.disconnect();
+  }, [columnCount, gap]);
+
+  const { positions, totalHeight } = useMemo(() => {
+    if (columnWidth <= 0) {
+      return { positions: [], totalHeight: 0 };
+    }
+    const colHeights = Array.from({ length: columnCount }, () => 0);
+    const list = items.map((item) => {
+      let minIdx = 0;
+      let minH = colHeights[0];
+      for (let i = 1; i < columnCount; i++) {
+        if (colHeights[i] < minH) {
+          minH = colHeights[i];
+          minIdx = i;
+        }
+      }
+      const left = minIdx * (columnWidth + gap);
+      const top = colHeights[minIdx];
+      colHeights[minIdx] += item.height + gap;
+      return { item, left, top, width: columnWidth, height: item.height };
+    });
+    const maxCol = colHeights.length ? Math.max(...colHeights) : 0;
+    const total = list.length ? Math.max(0, maxCol - gap) : 0;
+    return { positions: list, totalHeight: total };
+  }, [items, columnCount, gap, columnWidth]);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        maxWidth: containerMaxWidth,
+        margin: '0 auto',
+      }}
+    >
+      <div style={{ position: 'relative', width: '100%', minHeight: totalHeight || 1 }}>
+        {positions.map(({ item, left, top, width, height }) => (
+          <div
+            key={item.id}
+            style={{
+              position: 'absolute',
+              left,
+              top,
+              width,
+              borderRadius: 8,
+              overflow: 'hidden',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            }}
+          >
+            <div
+              style={{
+                height,
+                background: item.color,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontWeight: 600,
+                fontSize: 14,
+              }}
+            >
+              {item.title}
+              <span style={{ marginLeft: 8, opacity: 0.9 }}>{item.height}px</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export const WaterfallDemo = () => {
   const [count, setCount] = useState(12);
-  const [mode, setMode] = useState('image'); // 'image' | 'shortest' | 'columns'
+  const [mode, setMode] = useState('image'); // 'image' | 'imageAbsolute' | 'shortest' | 'absolute' | 'columns'
   const [cols, setCols] = useState(3);
 
   const colorItems = useMemo(() => makeItems(count), [count]);
@@ -474,6 +696,8 @@ export const WaterfallDemo = () => {
         <code>onLoad</code> 里用 <code>naturalWidth / naturalHeight</code> 和列宽算显示高度{' '}
         <code>(naturalHeight / naturalWidth) * columnWidth</code>。
         加载中用 SVG 占位图，真实图加载完再渐显，避免空白。
+        <strong>绝对定位</strong>模式用同一套最短列算法算出每项的{' '}
+        <code>left</code> / <code>top</code>，父容器高度为各列累计高的最大值，便于与虚拟列表或动画结合。
       </p>
 
       <div
@@ -492,8 +716,10 @@ export const WaterfallDemo = () => {
             onChange={(e) => setMode(e.target.value)}
             style={{ padding: '6px 10px' }}
           >
-            <option value="image">图片 + 占位 + onLoad 算高</option>
-            <option value="shortest">色块最短列（JS）</option>
+            <option value="image">图片 + 占位 + onLoad 算高（flex 多列）</option>
+            <option value="imageAbsolute">图片 + 绝对定位瀑布流</option>
+            <option value="shortest">色块最短列（JS flex）</option>
+            <option value="absolute">色块绝对定位瀑布流</option>
             <option value="columns">色块多列（CSS columns）</option>
           </select>
         </label>
@@ -543,8 +769,18 @@ export const WaterfallDemo = () => {
       {mode === 'shortest' && (
         <WaterfallShortestColumn items={colorItems} columnCount={cols} />
       )}
+      {mode === 'absolute' && (
+        <WaterfallAbsolute items={colorItems} columnCount={cols} />
+      )}
       {mode === 'image' && (
         <WaterfallImageMasonry
+          items={imageItems}
+          columnCount={cols}
+          defaultHeight={200}
+        />
+      )}
+      {mode === 'imageAbsolute' && (
+        <WaterfallImageMasonryAbsolute
           items={imageItems}
           columnCount={cols}
           defaultHeight={200}
