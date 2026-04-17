@@ -1,6 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+ * 【面试介绍 · DialogDemo】
+ *
+ * 做什么：Dialog.show(options) 返回 Promise，确定/取消 resolve 枚举，适合非 JSX 里 await 再分支。
+ *
+ * 难点：
+ * - 命令式：运行时建容器 + createRoot 挂子树，不在父组件 return 里声明。
+ * - 销毁：先 unmount 再 removeChild，避免不同步与泄漏。
+ * - Promise 与 options.onOkClick 等钩子并存，统一用 resolve 拿结果。
+ *
+ * 复杂点：与 Modal 对比——声明式适合页内；命令式适合工具函数、链式确认。
+ * 当前 DialogCom 无 ESC、遮罩关闭、非 Portal，属轻量确认框；对标 Modal.confirm 可补 a11y 与多层 z-index。
+ *
+ * 与 AutoComplete、ModalDemo 一起说的总述：异步搜索（防抖+Abort+竞态）；声明式 Modal（Portal+受控+动画）；命令式 Dialog（createRoot+Promise）。
+ */
+
 // 弹窗UI组件
 function DialogCom({title, msg, okText, cancelText, onOkClick, onCancelClick}) {
   return (

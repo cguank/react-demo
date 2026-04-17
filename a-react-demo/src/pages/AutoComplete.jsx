@@ -1,5 +1,21 @@
 import React from 'react';
 
+/**
+ * 【面试介绍 · AutoComplete】
+ *
+ * 做什么：输入框 + 下拉；随输入拉候选，支持回填、点击外部关闭、loading / 空态。
+ *
+ * 难点：
+ * - 请求竞态：后发先至会盖错列表。用 seqRef 只在「当前这一代请求」结束时关 loading，返回后比对序号丢弃过期结果。
+ * - 取消无用请求：AbortController；finally 里要结合序号，避免 abort 后 loading 关错。
+ * - 防抖：useDebounce 与 abort、序号配合，少打接口且不乱序。
+ *
+ * 复杂点：value/list/show/loading 与异步交织；根 ref + document 监听点外关闭须清理。
+ * 生产化：mockData/getList 应改为 props 注入如 fetchSuggestions(query, signal)。
+ *
+ * 与 ModalDemo、DialogDemo 一起说的总述：异步搜索（防抖+Abort+竞态）；声明式 Modal（Portal+受控+动画）；命令式 Dialog（createRoot+Promise）。
+ */
+
 // 模拟接口
 const mockData = {
   code: 0,

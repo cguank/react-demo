@@ -1,6 +1,22 @@
 import React, {useEffect, useRef, useState} from 'react';
 import { createPortal } from 'react-dom';
 
+/**
+ * 【面试介绍 · ModalDemo】
+ *
+ * 做什么：受控弹窗 visible + title + children；onClose；可选 afterClose、maskClosable。
+ *
+ * 难点：
+ * - createPortal → document.body，避免父级 overflow/层级裁剪。
+ * - 遮罩 vs 内容区：contentRef.contains(e.target)，避免点内容也关。
+ * - ESC：window keydown，依赖 visible/onClose 清理 effect。
+ * - 关闭动画：visible false 时 anim 过渡后再 afterClose，避免直接卸载截断动画。
+ *
+ * 复杂点：受控/非受控边界（有 visible 则完全听父组件）。生产可补焦点 trap、锁滚动、aria。
+ *
+ * 与 AutoComplete、DialogDemo 一起说的总述：异步搜索（防抖+Abort+竞态）；声明式 Modal（Portal+受控+动画）；命令式 Dialog（createRoot+Promise）。
+ */
+
 // 动画 className（写在 style 里也可以）
 const cls = {
   mask: 'modal-mask',
