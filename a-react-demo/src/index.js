@@ -71,6 +71,7 @@ import {  TSXDemo } from './pages/TSXDemo'
 import { WaterfallDemo } from './pages/WaterfallDemo'
 import { PositionDemo } from './pages/PositionDemo'
 import { ModalDemo  } from "./pages/ModalDemo";
+import { PythonToken  } from "./pages/PythonToken";
 
 
 const root = ReactDOM.createRoot(
@@ -138,6 +139,7 @@ root.render(<Test />)
 // root.render(<RefUnmountAnalysis />)
 // root.render(<TimeSlicingContinuationAnalysis />)
 // root.render(<ReactSchedulingAnalysis />)
+root.render(<PythonToken />)
 // root.render(<DesignPatternsInterview />)
 // root.render(<SingleChld />)
 // root.render(<AutoComplete />)
@@ -148,7 +150,6 @@ root.render(<Test />)
 // root.render(<WaterfallDemo />)
 // root.render(<PositionDemo />)
 // root.render(<ModalDemo />)
-
 // root.render(<ReactRefsAnalysis />);
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -2,6 +2,7 @@ import React from 'react'
 
 function Child ({ count }) {
   const ref = React.useRef(null)
+  const divRef = React.useRef(null)
   React.useLayoutEffect(() => {
       
     console.log('uselayout', count, ref.current);
@@ -41,34 +42,34 @@ function Child ({ count }) {
 
 export function Test () {
   const [count, setCount] = React.useState(0);
-  const fn = () => {
-    setInterval(() => {
-      console.log('test fn', count);
-    }, 1000);
-  }
-  console.log(count);
+  const divRef = React.useRef(null)
 
   React.useEffect(() => {
     setTimeout(() => {
-      console.log('setTimeout',count);
+      console.log('...........1111',count);
       
-    }, 10000);
-  },[])
-  
-  React.useEffect(() => {
-    // fn();
-    window.addEventListener('fetch', (e) => {
-      try {
-        console.log('fetch', e);
-      } catch (error) {
-        console.log('fetch error', error);
-      }
-    })
+      setCount(c=>c+101);    
+      console.log('...........2222',count);
+       
+    }, 1000);
   }, []);
+  React.useEffect(() => {
+    if (!divRef.current) return;
+    console.log('====',count);
+      setCount(c=>c+11);    
+       console.log(count);
+       
+      divRef.current.style.opacity = 1
+    },[])
+  
   return (
     <div>
-      {count && <Child count={count} />}
-      <div style={{display: 'inline-flex'}}>
+      <div ref={divRef}>this is div 11 { count }</div>
+      <div contentEditable="true">abc11d</div>
+
+      <div style={{ display: 'inline-flex' }} ref={React.useCallback((el)=>{
+        console.log('...el',el);
+      },[])}>
         <div
           class="item"
           style={{flexGrow: 1, flexBasis: 200}}
